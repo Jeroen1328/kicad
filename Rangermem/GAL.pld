@@ -1,0 +1,69 @@
+/*
+  Project: RangerMemory
+  Author: Jeroen Vlasveld
+  Device: GAL16V8
+  Language: Standard PLD Assembler Syntax (e.g., CUPL/ABEL)
+*/
+Name     RangerMemory
+Partno   JV_001
+Revision 01
+Date     28/09/2025
+Designer Jeroen Vlasveld
+Device   G16V8A
+
+/* Input Pins */
+PIN 1  = AS_CPU;         /* Address Strobe from CPU (Active Low) */
+PIN 2  = A23;            /* Address Line 23 */
+PIN 3  = A22;            /* Address Line 22 */
+PIN 4  = A21;            /* Address Line 21 */
+PIN 5  = A20;            /* Address Line 20 */
+PIN 6  = A19;            /* Address Line 19 */
+PIN 7  = RAM1_E;         /* RAM 1 Enable Signal (Active Low - used as active high RAM1_E) */
+PIN 8  = RAM2_E;         /* RAM 2 Enable Signal (Active Low - used as active high RAM2_E) */
+PIN 9  = RAM3_E;         /* RAM 3 Enable Signal (Active Low - used as active high RAM3_E) */
+
+/* Output Pins - Note: Pin 13 is used for RAMCS1-3 due to insufficient pins in GAL16V8 
+   for the requested functionality. Assuming these are separate outputs on pins 13, 14, 15.
+*/
+PIN 12 = /AS_MB;         /* Address Strobe for Mother Board (Active Low) */
+PIN 13 = /RAMCS1;        /* RAM Chip Select 1 (Active Low) */
+PIN 14 = /RAMCS2;        /* RAM Chip Select 2 (Active Low) */
+PIN 15 = /RAMCS3;        /* RAM Chip Select 3 (Active Low) */
+PIN 16 = /DTACK;         /* Data Transfer Acknowledge (Active Low, Tri-state) */
+
+
+/* Intermediate terms for Address Decoding (Active High) */
+/* $C0000-$C7FFF range (A23..A19 = 11000) */
+A_RAM1_DEC = A23 & A22 & !A21 & !A20 & !A19; 
+/* $C8000-$CFFFF range (A23..A19 = 11001) */
+A_RAM2_DEC = A23 & A22 & !A21 & !A20 & A19; 
+/* $D0000-$D7FFF range (A23..A19 = 11010) */
+A_RAM3_DEC = A23 & A22 & !A21 & A20 & !A19; 
+
+
+/* Logic Equations (Active-Low Outputs) */
+
+/* /RAMCS1 is active (low) when in range AND /RAM1_Enable (RAM1_E) is active (low) */
+/RAMCS1 = !(A_RAM1_DEC & !RAM1_E);
+
+/* /RAMCS2 is active (low) when in range AND /RAM2_Enable (RAM2_E) is active (low) */
+/RAMCS2 = !(A_RAM2_DEC & !RAM2_E);
+
+/* /RAMCS3 is active (low) when in range AND /RAM3_Enable (RAM3_E) is active (low) */
+/RAMCS3 = !(A_RAM3_DEC & !RAM3_E);
+
+
+/* Term for when ANY RAM Chip Select is active (low) */
+ANY_RAM_ACTIVE = (!/RAMCS1) # (!/RAMCS2) # (!/RAMCS3);
+
+/* /AS_MB is active (low) if /AS_CPU is active (low) AND none of the RAMs are selected (i.e., RAMCS are high) */
+/AS_MB = AS_CPU & !ANY_RAM_ACTIVE; 
+
+
+/* /DTACK is active (low) if any /RAMCS is active (low) */
+/DTACK = !ANY_RAM_ACTIVE; 
+
+/* The output buffer for /DTACK is enabled (driven) when any /RAMCS is active (low). 
+   Otherwise, it's in High Impedance. (Assuming standard active-high .OE for output enable)
+*/
+/DTACK.OE = ANY_RAM_ACTIVE;
