@@ -2,6 +2,9 @@
 
 The **KickCard** project was born out of a common frustration among **Amiga 500** enthusiasts: the hassle and motherboard variations involved in upgrading the internal **Kickstart ROM**. This external interface, connected via the Amiga 500's side expansion slot, offers a clean, versatile, and non-intrusive solution for using different Kickstart ROMs.
 
+### Status
+This project is **currently under construction** and has **not been tested** in a physical unit. The author is uncertain if a functional board will ultimately be built.
+
 ---
 
 ### Overcoming Internal ROM Challenges
@@ -34,6 +37,7 @@ The core of the KickCard's operation relies on a **GAL (Generic Array Logic)** c
 3.  **Gary Disablement:** The asserted $\overline{\text{OVR}}$ signal prevents the **GARY** (Gate Array) chip—which typically manages memory arbitration—from responding to the bus, effectively taking control of the Kickstart address space.
 4.  **ROM Selection:** Simultaneously, the GAL uses the logic to select **one of the two external ROMs** (ROM1 or ROM2) based on the **ROMSEL** switch setting and the selected bank (A18/A19).
 5.  **Deactivation:** The $\overline{\text{OVL}}$ remains active until the CPU executes a write access to the address of the **CIA (Complex Interface Adapter)** chips. This action typically signals the completion of the basic system startup, and the GAL then makes the $\overline{\text{OVL}}$ register **inactive**, returning memory control to the standard system configuration.
-6.  **when one of the roms is selected, the GAL also asserts the $\overline{\text{DTACK}}$ signal to tell the 68000 to complete the read cycle
+6.  **when one of the roms is selected, the GAL also asserts the $\overline{\text{DTACK}}$ signal to tell the 68000 to complete the read cycle.
+7.  the GAL also uses the CCK and CCKQ to create the 7Mhz clock as not all Amiga revisions supplies this on the expansion bus. however, the code in the GAL doesn't use the CLK_IN signal, this was used in a project that I used as reference)
  
 In essence, the KickCard *tricks* the Amiga into loading the Kickstart from the expansion port during the critical boot sequence, providing a robust and flexible ROM replacement solution.
