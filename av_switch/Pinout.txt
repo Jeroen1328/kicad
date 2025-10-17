@@ -1,0 +1,10 @@
+1.	Audio_R
+2.	Audio_L
+3.	Y
+4.	Composite
+5.	ID2
+6.	Audio_Ra
+7.	GND
+8.	C
+9.	ID1
+
