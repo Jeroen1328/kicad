@@ -1,0 +1,38 @@
+Name     GAL_LOGIC ;
+Partno   001 ;
+Revision 02 ;
+Date     8/10/2025 ;
+Designer Jeroen Vlasveld ;
+Device   g22V10 ;
+Company    XXXXX;
+Assembly   XXXXX;
+Location   XXXXX;
+
+
+/* INPUTS */
+pin [1..6]  = [A23..A18];
+pin 7  = !AS;
+pin 8  = !ROMEN;
+pin 9  = !RESET;
+pin 10 = RW;
+
+/* OUTPUTS */
+pin 15 = !DTACK;
+pin 16 = !OVR;
+pin 17 = !ROM;
+pin 19 = !OVL;
+pin 20 = !NOVL;
+
+FIELD address = [A23..18];
+
+ROM = (address:[000000..07FFFF] & OVL & AS & ROMEN) # (address:[F80000..FFFFFF] & AS & ROMEN);
+NOVL = !(OVL & RESET);
+OVL = !(NOVL & (address:[BFXXXX] & !RW & AS));
+
+/* DTACK (active low, tri-state) */
+DTACK = 'b'1;//ROM ;
+
+DTACK.OE = ROM; // tristated when not pulled low
+
+/* OVR (active low) */
+OVR =  ROM;

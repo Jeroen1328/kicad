@@ -1,0 +1,92 @@
+
+*******************************************************************************
+                                   GAL_LOGIC
+*******************************************************************************
+
+CUPL(WM)        5.0a Serial# MW-10400000
+Device          g22v10  Library DLIB-h-40-1
+Created         Tue Oct 14 16:02:01 2025
+Name            GAL_LOGIC 
+Partno          001 
+Revision        02 
+Date            8/10/2025 
+Designer        Jeroen Vlasveld 
+Company         XXXXX
+Assembly        XXXXX
+Location        XXXXX
+
+===============================================================================
+                            Expanded Product Terms
+===============================================================================
+
+DTACK =>
+    1 
+
+DTACK.oe  =>
+    ROM
+
+NOVL =>
+    OVL & RESET
+
+OVL =>
+    A18 & A19 & A20 & A21 & !A22 & A23 & AS & NOVL & !RW
+
+OVR =>
+    ROM
+
+ROM =>
+    !A19 & !A20 & !A21 & !A22 & !A23 & AS & OVL & ROMEN
+  # A19 & A20 & A21 & A22 & A23 & AS & ROMEN
+
+address =>
+    A23 , A22 , A21 , A20 , A19 , A18
+
+NOVL.oe  =>
+    1 
+
+OVL.oe  =>
+    1 
+
+OVR.oe  =>
+    1 
+
+ROM.oe  =>
+    1 
+
+
+===============================================================================
+                                 Symbol Table
+===============================================================================
+
+Pin Variable                                    Pterms   Max     Min    
+Pol   Name              Ext     Pin     Type     Used   Pterms  Level   
+--- --------            ---     ---     ----    ------  ------  -----   
+
+    A18                         6        V        -       -       -     
+    A19                         5        V        -       -       -     
+    A20                         4        V        -       -       -     
+    A21                         3        V        -       -       -     
+    A22                         2        V        -       -       -     
+    A23                         1        V        -       -       -     
+ !  AS                          7        V        -       -       -     
+ !  DTACK                       15       V        1       10      1     
+    DTACK               oe      15       X        1       1       1     
+ !  NOVL                        20       V        1       14      1     
+ !  OVL                         19       V        1       16      1     
+ !  OVR                         16       V        1       12      1     
+ !  RESET                       9        V        -       -       -     
+ !  ROM                         17       V        2       14      1     
+ !  ROMEN                       8        V        -       -       -     
+    RW                          10       V        -       -       -     
+    address                     0        F        -       -       -     
+    NOVL                oe      20       D        1       1       0     
+    OVL                 oe      19       D        1       1       0     
+    OVR                 oe      16       D        1       1       0     
+    ROM                 oe      17       D        1       1       0     
+
+
+LEGEND    D : default variable         F : field      G : group
+          I : intermediate variable    N : node       M : extended node
+          U : undefined                V : variable   X : extended variable
+          T : function
+
